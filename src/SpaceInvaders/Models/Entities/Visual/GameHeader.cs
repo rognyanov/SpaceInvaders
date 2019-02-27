@@ -41,12 +41,35 @@ namespace SpaceInvaders.Models.Entities.Visual
 
             _renderer.SetColor(ConsoleColor.White);
             RenderScore(0);
-            //Score.PlotLifes(_lifes);
+            RenderLevel(1);
+            RenderLifes(3);
+        }
+
+        public void RenderStats(int score, int level, int lifes)
+        {
+            RenderScore(score);
+            RenderLevel(level);
+            RenderLifes(lifes);
         }
 
         public void RenderScore(int score)
         {
             RenderNumber(score, 7, SCORE_X, SCORE_Y);
+        }
+
+        public void RenderLevel(int level)
+        {
+            RenderNumber(level, 2, SCORE_X, SCORE_Y + 1);
+        }
+
+        public void RenderLifes(int lifes)
+        {
+            RenderNumber(lifes, 2, SCORE_X, SCORE_Y + 3);
+        }
+
+        public void UnrenderLifes()
+        {
+            _renderer.DrawAtPosition(SCORE_X, SCORE_Y + 3, "  ");
         }
 
         private void RenderNumber(int value, int format, int x, int y)

@@ -81,7 +81,7 @@ namespace SpaceInvaders.Models
                 //GameOver();
             }
 
-            //Render score
+            _gameHeader.RenderStats(_score, _level, _lifes);
         }
 
         private void LifeLost()
@@ -107,17 +107,17 @@ namespace SpaceInvaders.Models
                     if (displayLifes)
                     {
                         displayLifes = false;
-                        //Score.PlotLifes(_lifes + 1);
+                        _gameHeader.RenderLifes(_lifes + 1);
                     }
                     else
                     {
                         displayLifes = true;
-                        //Score.UnplotLifes();
+                        _gameHeader.UnrenderLifes();
                     }
                 }
             }
 
-            //Score.PlotLifes(_lifes);
+            _gameHeader.RenderLifes(_lifes);
         }
 
         private void RenderEntities()
