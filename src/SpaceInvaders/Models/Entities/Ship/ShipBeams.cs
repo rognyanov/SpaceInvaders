@@ -8,7 +8,7 @@ namespace SpaceInvaders.Models.Entities.Ship
     public class ShipBeams : BeamsBase
     {
         private const int MOVE_SPEED = 1;
-        private const int UPPER_BOUNDARY = 0; //TODO: When header added must change this value to header boundary
+        private const int UPPER_BOUNDARY = 6; //TODO: When header added must change this value to header boundary
 
         public ShipBeams(IRenderer<string> renderer)
             : base(renderer)

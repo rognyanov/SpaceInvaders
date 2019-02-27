@@ -1,4 +1,5 @@
 ﻿using SpaceInvaders.Models;
+using SpaceInvaders.Models.Grid;
 
 namespace SpaceInvaders
 {
@@ -6,8 +7,7 @@ namespace SpaceInvaders
     {
         static void Main(string[] args)
         {
-            var game = new SpaceInvadersConsoleGame();
-            game.PrepareConsole();
+            var game = new SpaceInvadersConsoleGame(new ConsoleRenderer());
             game.Play();
         }
     }

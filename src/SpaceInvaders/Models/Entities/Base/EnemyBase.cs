@@ -6,7 +6,7 @@ using SpaceInvaders.Models.Helpers;
 
 namespace SpaceInvaders.Models.Entities.Base
 {
-    public class EnemyBase : GameObject, IEnemyMovable
+    public class EnemyBase : GameObject, IEnemyMovable, IDestroyable
     {
         private const int ANIMATIONS_INIT_SPEED = 12;
         private const int SPRITE_HEIGHT = 3;
@@ -19,12 +19,15 @@ namespace SpaceInvaders.Models.Entities.Base
         private Timer _animationTimer;
         private bool _switchImage = false;
 
-        public EnemyBase(int x, int y, ConsoleColor color, IRenderer<string> renderer)
+        public bool IsDestroyed { get; private set; }
+
+        public EnemyBase(int x, int y, ConsoleColor color, IRenderer<string> renderer, bool isDestoryed = false)
             :base(new ConsolePosition(x,y))
         {
             _renderer = renderer;
             _color = color;
             _animationTimer = new Timer(ANIMATIONS_INIT_SPEED);
+            IsDestroyed = isDestoryed;
         }
 
         public void Move(MoveType move, bool increaseY)

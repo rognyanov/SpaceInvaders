@@ -4,6 +4,7 @@ using SpaceInvaders.Models.Entities.Base;
 using System;
 using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
+using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Ship
 {
@@ -37,6 +38,12 @@ namespace SpaceInvaders.Models.Entities.Ship
             _currentMove = MoveType.None;
             _beams = new ShipBeams(renderer);
             _moveTimer = new Timer(INIT_MOVE_SPEED);
+        }
+
+        public void ReInitialize()
+        {
+            Position = new ConsolePosition(INIT_X, INIT_Y);
+            _currentMove = MoveType.None;
         }
 
         public void Move()
@@ -116,6 +123,16 @@ namespace SpaceInvaders.Models.Entities.Ship
         public void MoveBeams()
         {
             _beams.Move();
+        }
+
+        public List<BeamBase> GetBeams()
+        {
+            return _beams.GetBeams();
+        }
+
+        public void DeleteBeams(List<BeamBase> beams)
+        {
+            _beams.DeleteBeams(beams);
         }
     }
 }

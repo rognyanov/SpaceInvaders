@@ -4,7 +4,7 @@ namespace SpaceInvaders.Models.Entities.Base
 {
     public abstract class GameObject : IRenderable
     {
-        public IPosition Position { get; private set; }
+        public IPosition Position { get; protected set; }
 
         protected GameObject(IPosition position)
         {
