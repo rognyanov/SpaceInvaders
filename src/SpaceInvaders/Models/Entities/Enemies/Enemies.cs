@@ -110,7 +110,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
                 _enemies.Remove(temp);
             }
 
-            return new EnemyBase(position.X, position.Y, ConsoleColor.White, _renderer, isDestroyed);
+            return new EnemyBase(0, 0, ConsoleColor.White, _renderer, isDestroyed);
         }
 
         public bool HasDestroyedShip(IPosition shipPosition)
