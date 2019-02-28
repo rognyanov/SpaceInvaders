@@ -8,7 +8,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
         public EnemyBeam(int x, int y) 
             : base(new ConsolePosition(x,y), new ConsoleRenderer())
         {
-            _beam = '.';
+            _beam = '*';
             _increment = 1;
         }
     }

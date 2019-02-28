@@ -9,7 +9,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
     public class EnemyBeams : BeamsBase
     {
         private const int MOVE_SPEED = 2;
-        private const int LOWER_BOUNDARY = 63;
+        private const int LOWER_BOUNDARY = 59;
 
         public EnemyBeams(IRenderer<string> renderer)
             :base(renderer)
@@ -25,16 +25,16 @@ namespace SpaceInvaders.Models.Entities.Enemies
                 return;
 
             var rnd = new Random();
-            int index = rnd.Next(0, positions.Count);
-            int x = positions[index].X + 3;
-            int y = positions[index].Y + 3;
+            var index = rnd.Next(0, positions.Count);
+            var x = positions[index].X + 3;
+            var y = positions[index].Y + 3;
 
             _beams.Add(new EnemyBeam(x, y));
         }
 
         public bool HasDestroyedShip(IPosition shipPosition)
         {
-            bool result = false;
+            var result = false;
 
             var beamsToDelete = new List<BeamBase>();
             foreach (var beam in _beams)

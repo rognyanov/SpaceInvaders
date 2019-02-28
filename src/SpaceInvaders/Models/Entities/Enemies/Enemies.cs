@@ -4,6 +4,7 @@ using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
@@ -86,8 +87,8 @@ namespace SpaceInvaders.Models.Entities.Enemies
 
             if (_moveUpSteps.IsCounting())
                 return;
-
-            int min = 60;
+            
+            var min = 60;
 
             foreach (var enemy in _enemies)
             {
@@ -209,6 +210,11 @@ namespace SpaceInvaders.Models.Entities.Enemies
         {
             _moveUpSteps = new Timer(MOVE_UP_STEPS);
             _moveUpSpeed = new Timer(MOVE_UP_SPEED);
+        }
+
+        public List<IPosition> GetPositions()
+        {
+            return _enemies.Select(e => e.Position).ToList();
         }
     }
 }
