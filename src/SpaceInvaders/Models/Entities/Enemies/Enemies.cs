@@ -9,13 +9,18 @@ namespace SpaceInvaders.Models.Entities.Enemies
 {
     public class Enemies : IMovable
     {
+        private const int Y_MIN = 32;
+        private const int MOVE_UP_SPEED = 5;
+        private const int MOVE_UP_STEPS = 15;
         private const int LEFT_BOUNDARY = 1;
         private const int RIGHT_BOUNDARY = 93;
-        private const int BOTTOM_BOUNDARY = 60;
+        private const int BOTTOM_BOUNDARY = 55;
         private const int MOVE_INIT_SPEED = 6;
 
         private List<EnemyBase> _enemies;
         private Timer _moveTimer;
+        private Timer _moveUpSteps;
+        private Timer _moveUpSpeed;
         private MoveType _currentMove;
         private IRenderer<string> _renderer;
 
@@ -23,6 +28,8 @@ namespace SpaceInvaders.Models.Entities.Enemies
         {
             _enemies = new List<EnemyBase>();
             _moveTimer = new Timer(MOVE_INIT_SPEED);
+            _moveUpSteps = new Timer(MOVE_UP_STEPS);
+            _moveUpSpeed = new Timer(MOVE_UP_SPEED);
             _renderer = renderer;
             _currentMove = MoveType.Right;
 
@@ -70,6 +77,34 @@ namespace SpaceInvaders.Models.Entities.Enemies
             _enemies.ForEach(e => e.Move(_currentMove, increaseY));
 
             HasReachedBottom();
+        }
+
+        public void MoveUp()
+        {
+            if (_moveUpSpeed.IsCounting())
+                return;
+
+            if (_moveUpSteps.IsCounting())
+                return;
+
+            int min = 60;
+
+            foreach (var enemy in _enemies)
+            {
+                var position = enemy.Position;
+                if (min > position.Y)
+                    min = position.Y;
+            }
+
+            if (min <= Y_MIN)
+                return;
+
+            foreach (var enemy in _enemies)
+            {
+                var position = enemy.Position;
+                _renderer.DrawAtPosition(position.X, position.Y+2, "       ");
+                enemy.DecreaseY();
+            }
         }
 
         public void Render()
@@ -145,12 +180,12 @@ namespace SpaceInvaders.Models.Entities.Enemies
             {
                 var x = i * 8 + 1;
 
-                _enemies.Add(new StandartEnemy(x, 10, ConsoleColor.Green, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 14, ConsoleColor.Yellow, _renderer));
-                _enemies.Add(new HardEnemy(x, 18, ConsoleColor.Red, _renderer));
-                _enemies.Add(new StandartEnemy(x, 22, ConsoleColor.Blue, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 26, ConsoleColor.Cyan, _renderer));
-                _enemies.Add(new HardEnemy(x, 30, ConsoleColor.Magenta, _renderer));
+                _enemies.Add(new StandartEnemy(x, 10 + 23+1, ConsoleColor.Green, _renderer));
+                _enemies.Add(new AdvancedEnemy(x, 14 + 23+1, ConsoleColor.Yellow, _renderer));
+                _enemies.Add(new HardEnemy(x,     18 + 23+1, ConsoleColor.Red, _renderer));
+                _enemies.Add(new StandartEnemy(x, 22 + 23+1, ConsoleColor.Blue, _renderer));
+                _enemies.Add(new AdvancedEnemy(x, 26 + 23+1, ConsoleColor.Cyan, _renderer));
+                _enemies.Add(new HardEnemy(x,     30 + 23+1, ConsoleColor.Magenta, _renderer));
             }
         }
 
@@ -161,14 +196,19 @@ namespace SpaceInvaders.Models.Entities.Enemies
             foreach (var enemy in _enemies)
             {
                 var position = enemy.Position;
-                if (position.Y > BOTTOM_BOUNDARY)
-                {
-                    enemy.Unrender();
-                    enemiesToDelete.Add(enemy);
-                }
+                if (position.Y <= BOTTOM_BOUNDARY) continue;
+
+                enemy.Unrender();
+                enemiesToDelete.Add(enemy);
             }
 
             enemiesToDelete.ForEach(e => _enemies.Remove(e));
+        }
+
+        public void ResetMoveUp()
+        {
+            _moveUpSteps = new Timer(MOVE_UP_STEPS);
+            _moveUpSpeed = new Timer(MOVE_UP_SPEED);
         }
     }
 }

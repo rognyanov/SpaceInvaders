@@ -5,7 +5,9 @@ using SpaceInvaders.Models.Entities.Ship;
 using SpaceInvaders.Models.Entities.Visual;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
+using SpaceInvaders.Models.Grid;
 using Timer = SpaceInvaders.Models.Helpers.Timer;
 
 namespace SpaceInvaders.Models
@@ -44,15 +46,22 @@ namespace SpaceInvaders.Models
                 //Plot ship, enemies, beams
                 RenderEntities();
 
+                //Is level completed
+                if (IsLevelCompleted())
+                {
+                    LevelCompleted();
+                    //Init next level
+                }
+
+                //Check if ship destroyed enemy and increase score
+                CheckIfShipDestroyedEnemy();
+
                 //Check if ship is destroyed
                 if (CheckIfEnemeyDestroyedShip())
                 {
                     ShipDestroyed();
                     _isGameOver = _lifes == 0;
                 }
-
-                //Check if ship destroyed enemy and increase score
-                CheckIfShipDestroyedEnemy();
 
                 //Short delay
                 Delay();
@@ -63,6 +72,51 @@ namespace SpaceInvaders.Models
                 //Move entities
                 Move();
             }
+
+            GameOver();
+        }
+
+        private void LevelCompleted()
+        {
+            var counter = new Timer(200);
+            var scoreCounter = new Timer(8);
+            var levelBlinker = new TextBlinker(new ConsolePosition(43,22), _renderer, "L E V E L   C O M P L E T E D!" );
+            var bonusBlinker = new TextBlinker(new ConsolePosition(45,24), _renderer, "Level bonus - 1000 points." );
+            var displayScore = false;
+
+            while (counter.IsCounting())
+            {
+                levelBlinker.Invoke();
+                bonusBlinker.Invoke();
+                _ship.RenderBeams();
+
+                if (!scoreCounter.IsCounting())
+                {
+                    displayScore = !displayScore;
+
+                    if (displayScore)
+                        _gameHeader.RenderLevel(_level);
+                    else
+                        _gameHeader.UnrenderLifes();
+                } 
+
+                _score += 5;
+                _gameHeader.RenderScore(_score);
+                Delay();
+                _ship.MoveBeams();
+            }
+
+            _level++;
+            _gameHeader.RenderLevel(_level);
+            Delay(800);
+
+            _renderer.DrawAtPosition(43, 22, "                              ");
+            _renderer.DrawAtPosition(45, 24, "                          ");
+        }
+
+        private void GameOver()
+        {
+            _renderer.DrawAtPosition(42,15,"G A M E   O V E R!");
         }
 
         private void ShipDestroyed()
@@ -72,34 +126,31 @@ namespace SpaceInvaders.Models
             _enemies.Render();
             _ship.Unrender();
 
-            if (_lifes > 0)
-            {
-                LifeLost();
-            }
-            else
-            {
-                //GameOver();
-            }
+            LifeLost();
 
             _gameHeader.RenderStats(_score, _level, _lifes);
         }
 
         private void LifeLost()
         {
-            var counter = new Timer(90);
+            var time = (_lifes == 0) ? 170 : 100;
+            var counter = new Timer(time);
             var blinkCounter = new Timer(10);
 
-            bool displayLifes = true;
+            var displayLifes = true;
 
             _ship.ReInitialize();
-            //_enemies.ResetMoveUp();
+            _enemies.ResetMoveUp();
 
             while (counter.IsCounting())
             {
                 _enemies.Render();
-                _ship.RenderBeams();
+                _ship.RenderBeams(); 
                 Delay();
-                //_enemies.MoveUp();
+
+                if (_lifes>0)
+                _enemies.MoveUp();
+
                 _ship.MoveBeams();
 
                 if (!blinkCounter.IsCounting())
@@ -127,9 +178,9 @@ namespace SpaceInvaders.Models
             _enemies.Render();
         }
 
-        private void Delay()
+        private void Delay(int delay = DELAY)
         {
-            Thread.Sleep(DELAY);
+            Thread.Sleep(delay);
         }
 
         private void Move()
@@ -174,6 +225,11 @@ namespace SpaceInvaders.Models
             }
 
             return result;
+        }
+
+        private bool IsLevelCompleted()
+        {
+            return _enemies.IsEmpty();
         }
 
         internal void PrepareConsole()

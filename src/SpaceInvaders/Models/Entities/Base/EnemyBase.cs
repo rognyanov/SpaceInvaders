@@ -66,7 +66,7 @@ namespace SpaceInvaders.Models.Entities.Base
             Position.Move(MoveType.Down);
         }
 
-        public void DecreaseU()
+        public void DecreaseY()
         {
             Position.Move(MoveType.Up);
         }

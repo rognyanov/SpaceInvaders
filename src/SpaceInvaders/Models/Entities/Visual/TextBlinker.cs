@@ -14,6 +14,7 @@ namespace SpaceInvaders.Models.Entities.Visual
 
         public TextBlinker(IPosition position, IRenderer<string> renderer, string text)
         {
+            _renderer = renderer;
             _counter = new Timer(8); //TODO: BLINK_INTERVAL
             _position = position;
             _text = text;
@@ -33,7 +34,7 @@ namespace SpaceInvaders.Models.Entities.Visual
                 }
                 else
                 {
-                    for (int i = 0; i < _text.Length; i++)
+                    for (var i = 0; i < _text.Length; i++)
                     {
                         _renderer.DrawAtPosition(_position.X + i, _position.Y, " ");
                     }

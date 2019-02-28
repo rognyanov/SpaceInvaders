@@ -62,6 +62,11 @@ namespace SpaceInvaders.Models.Entities.Visual
             RenderNumber(level, 2, SCORE_X, SCORE_Y + 1);
         }
 
+        public void UnrenderLevel()
+        {
+            _renderer.DrawAtPosition(SCORE_X, SCORE_Y+1, "  ");
+        }
+
         public void RenderLifes(int lifes)
         {
             RenderNumber(lifes, 2, SCORE_X, SCORE_Y + 3);
