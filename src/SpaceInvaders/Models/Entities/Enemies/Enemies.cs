@@ -102,7 +102,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             foreach (var enemy in _enemies)
             {
                 var position = enemy.Position;
-                _renderer.DrawAtPosition(position.X, position.Y+2, "       ");
+                _renderer.DrawAtPosition(position.X, position.Y + 2, "       ");
                 enemy.DecreaseY();
             }
         }
@@ -180,12 +180,12 @@ namespace SpaceInvaders.Models.Entities.Enemies
             {
                 var x = i * 8 + 1;
 
-                _enemies.Add(new StandartEnemy(x, 10 + 23+1, ConsoleColor.Green, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 14 + 23+1, ConsoleColor.Yellow, _renderer));
-                _enemies.Add(new HardEnemy(x,     18 + 23+1, ConsoleColor.Red, _renderer));
-                _enemies.Add(new StandartEnemy(x, 22 + 23+1, ConsoleColor.Blue, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 26 + 23+1, ConsoleColor.Cyan, _renderer));
-                _enemies.Add(new HardEnemy(x,     30 + 23+1, ConsoleColor.Magenta, _renderer));
+                _enemies.Add(new StandartEnemy(x, 10, ConsoleColor.Green, _renderer));
+                _enemies.Add(new AdvancedEnemy(x, 14, ConsoleColor.Yellow, _renderer));
+                _enemies.Add(new HardEnemy(x, 18, ConsoleColor.Red, _renderer));
+                _enemies.Add(new StandartEnemy(x, 22, ConsoleColor.Blue, _renderer));
+                _enemies.Add(new AdvancedEnemy(x, 26, ConsoleColor.Cyan, _renderer));
+                _enemies.Add(new HardEnemy(x, 30, ConsoleColor.Magenta, _renderer));
             }
         }
 

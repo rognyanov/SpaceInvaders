@@ -17,36 +17,15 @@ namespace SpaceInvaders.Models.Entities.Visual
 
         public void Render()
         {
-            _renderer.SetColor(ConsoleColor.Yellow);
-            _renderer.DrawAtPosition(25, 2, @"___  ___   _  ___  __    .            _  __   __ ___  ___ ");
-            _renderer.DrawAtPosition(25, 3, @"|__  |__| |_| |   |_     | |\ | |  | |_| | | |_  |__| |__ ");
-            _renderer.DrawAtPosition(25, 4, @" __| |    | | |__ |__    | | \|  \/  | | |_| |__ |\    __|");
-
-            _renderer.SetColor(ConsoleColor.Red);
-
-            for (int i = 0; i < 100; i++)
-            {
-                _renderer.DrawAtPosition(i, 1, "=");
-            }
-
-            for (int i = 0; i < 100; i++)
-            {
-                _renderer.DrawAtPosition(i, 6, "=");
-            }
-
-            _renderer.SetColor(ConsoleColor.Cyan);
-            _renderer.DrawAtPosition(1, 2, "Score: ");
-            _renderer.DrawAtPosition(1, 3, "Level: ");
-            _renderer.DrawAtPosition(1, 5, "Lifes: ");
-
-            _renderer.SetColor(ConsoleColor.White);
-            RenderScore(0);
-            RenderLevel(1);
-            RenderLifes(3);
+            RenderLogo();
+            RenderStatsLabels();
+            RenderStats(0, 1, 3);
         }
 
         public void RenderStats(int score, int level, int lifes)
         {
+            _renderer.SetColor(ConsoleColor.White);
+
             RenderScore(score);
             RenderLevel(level);
             RenderLifes(lifes);
@@ -102,6 +81,35 @@ namespace SpaceInvaders.Models.Entities.Visual
         private void RenderDigit(int value, int x, int y)
         {
             _renderer.DrawAtPosition(x, y, value.ToString());
+        }
+
+        private void RenderLogo()
+        {
+            _renderer.SetColor(ConsoleColor.Red);
+            for (int i = 0; i < 100; i++)
+            {
+                _renderer.DrawAtPosition(i, 1, "=");
+            }
+
+            _renderer.SetColor(ConsoleColor.Yellow);
+            _renderer.DrawAtPosition(25, 2, @"___  ___   _  ___  __    .            _  __   __ ___  ___ ");
+            _renderer.DrawAtPosition(25, 3, @"|__  |__| |_| |   |_     | |\ | |  | |_| | | |_  |__| |__ ");
+            _renderer.DrawAtPosition(25, 4, @" __| |    | | |__ |__    | | \|  \/  | | |_| |__ |\    __|");
+
+            _renderer.SetColor(ConsoleColor.Red);
+            for (int i = 0; i < 100; i++)
+            {
+                _renderer.DrawAtPosition(i, 6, "=");
+            }
+        }
+
+        private void RenderStatsLabels()
+        {
+            _renderer.SetColor(ConsoleColor.Cyan);
+
+            _renderer.DrawAtPosition(1, 2, "Score: ");
+            _renderer.DrawAtPosition(1, 3, "Level: ");
+            _renderer.DrawAtPosition(1, 5, "Lifes: ");
         }
     }
 }

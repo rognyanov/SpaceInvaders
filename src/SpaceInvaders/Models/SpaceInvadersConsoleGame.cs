@@ -3,11 +3,10 @@ using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Entities.Enemies;
 using SpaceInvaders.Models.Entities.Ship;
 using SpaceInvaders.Models.Entities.Visual;
+using SpaceInvaders.Models.Grid;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
-using SpaceInvaders.Models.Grid;
 using Timer = SpaceInvaders.Models.Helpers.Timer;
 
 namespace SpaceInvaders.Models
@@ -50,6 +49,7 @@ namespace SpaceInvaders.Models
                 if (IsLevelCompleted())
                 {
                     LevelCompleted();
+                    _isGameOver = true;
                     //Init next level
                 }
 
@@ -78,7 +78,7 @@ namespace SpaceInvaders.Models
 
         private void LevelCompleted()
         {
-            var counter = new Timer(200);
+            var counter = new Timer(201);
             var scoreCounter = new Timer(8);
             var levelBlinker = new TextBlinker(new ConsolePosition(43,22), _renderer, "L E V E L   C O M P L E T E D!" );
             var bonusBlinker = new TextBlinker(new ConsolePosition(45,24), _renderer, "Level bonus - 1000 points." );
