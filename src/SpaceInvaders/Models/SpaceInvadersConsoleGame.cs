@@ -30,7 +30,7 @@ namespace SpaceInvaders.Models
         private int _level;
         private IShip _ship;
         private IEnemies _enemies;
-        private EnemyBeams _enemyBeams;
+        private EnemyBeamsBase _enemyBeams;
         private readonly IGameHeader _gameHeader;
         private readonly IExtraLife _extraLife;
         private IUfo _ufo;
