@@ -1,15 +1,16 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Helpers;
 using System;
 
 namespace SpaceInvaders.Models.Entities.Visual
 {
-    public class TextBlinker
+    public sealed class TextBlinker : IInvokable
     {
-        private IRenderer<string> _renderer;
-        private Timer _counter;
-        private IPosition _position;
-        private string _text;
+        private readonly IRenderer<string> _renderer;
+        private readonly Timer _counter;
+        private readonly IPosition _position;
+        private readonly string _text;
         private bool _diplayText;
 
         public TextBlinker(IPosition position, IRenderer<string> renderer, string text)

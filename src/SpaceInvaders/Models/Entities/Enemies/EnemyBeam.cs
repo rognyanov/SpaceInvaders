@@ -1,12 +1,13 @@
-﻿using SpaceInvaders.Models.Entities.Base;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Grid;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
-    public class EnemyBeam : BeamBase
+    public sealed class EnemyBeam : BeamBase
     {
-        public EnemyBeam(int x, int y) 
-            : base(new ConsolePosition(x,y), new ConsoleRenderer())
+        public EnemyBeam(IPosition position) 
+            : base(position, new ConsoleRenderer())
         {
             _beam = '*';
             _increment = 1;

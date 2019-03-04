@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Helpers;
+using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Ship
 {
-    public class ShipBeams : BeamsBase
+    public sealed class ShipBeams : BeamsBase
     {
         private const int MOVE_SPEED = 1;
         private const int UPPER_BOUNDARY = 6; //TODO: When header added must change this value to header boundary

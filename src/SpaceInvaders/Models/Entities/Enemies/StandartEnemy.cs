@@ -1,13 +1,14 @@
-﻿using System;
-using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
+using System;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
-    public class StandartEnemy : EnemyBase
+    public sealed class StandartEnemy : EnemyBase
     {
-        public StandartEnemy(int x, int y, ConsoleColor color, IRenderer<string> renderer)
-            : base(x, y, color, renderer)
+        public StandartEnemy(IPosition position, ConsoleColor color, IRenderer<string> renderer)
+            : base(position, color, renderer)
         {
             _image = new string[3]
             {

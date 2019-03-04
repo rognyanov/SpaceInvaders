@@ -1,15 +1,19 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Player;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Enums;
 using SpaceInvaders.Models.Entities.Base;
-using System;
 using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Ship
 {
-    public class Ship : GameObject, IMovable, IPlayer
+    public sealed class Ship : IShip
     {
+        public IPosition Position { get; private set; }
+
         private const int INIT_X = 45;
         private const int INIT_Y = 57;
         private const int IMAGE_HEIGHT = 3;
@@ -24,9 +28,10 @@ namespace SpaceInvaders.Models.Entities.Ship
         private ShipBeams _beams;
         private Timer _moveTimer;
 
-        public Ship(IRenderer<string> renderer)
-            : base(new ConsolePosition(INIT_X, INIT_Y))
+        public Ship(IPosition position, IRenderer<string> renderer)
         {
+            Position = position;
+
             _image = new string[3]
             {
                 @"   |   ",
@@ -90,7 +95,7 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
-        public override void Render()
+        public void Render()
         {
             _renderer.SetColor(ConsoleColor.White);
 
@@ -104,7 +109,7 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
-        public override void Unrender()
+        public void Unrender()
         {
             for (var i = 0; i < IMAGE_HEIGHT; i++)
             {

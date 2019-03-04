@@ -1,9 +1,9 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
 using SpaceInvaders.Enums;
 
 namespace SpaceInvaders.Models.Grid
 {
-    public class ConsolePosition : IPosition
+    public sealed class ConsolePosition : IPosition
     {
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -35,11 +35,6 @@ namespace SpaceInvaders.Models.Grid
                 default:
                     break;
             }
-        }
-
-        public void ReInitialize()
-        {
-            throw new System.NotImplementedException();
         }
 
         private void MoveLeft() => X--;

@@ -1,4 +1,4 @@
-﻿namespace SpaceInvaders.Contracts
+﻿namespace SpaceInvaders.Contracts.Player
 {
     public interface IPlayer
     {

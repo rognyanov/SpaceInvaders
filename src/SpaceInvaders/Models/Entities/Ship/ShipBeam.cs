@@ -1,10 +1,10 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Grid;
 
 namespace SpaceInvaders.Models.Entities.Ship
 {
-    public class ShipBeam : BeamBase
+    public sealed class ShipBeam : BeamBase
     {
         private const int INIT_Y = 57;
 
@@ -13,16 +13,6 @@ namespace SpaceInvaders.Models.Entities.Ship
         {
             _beam = '|';
             _increment = -1;
-        }
-        
-        public override void Render()
-        {
-            base.Render();
-        }
-
-        public override void Unrender()
-        {
-            base.Unrender();
         }
     }
 }

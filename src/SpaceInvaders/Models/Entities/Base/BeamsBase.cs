@@ -1,11 +1,12 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
+using SpaceInvaders.Models.Helpers;
 using System;
 using System.Collections.Generic;
-using SpaceInvaders.Models.Helpers;
 
 namespace SpaceInvaders.Models.Entities.Base
 {
-    public class BeamsBase : IRenderable, IMovable
+    public abstract class BeamsBase : IRenderable, IMovable
     {
         protected IRenderer<string> _renderer;
         protected List<BeamBase> _beams;
@@ -14,7 +15,7 @@ namespace SpaceInvaders.Models.Entities.Base
         protected Timer _moveTimer;
         protected int _endRow;
 
-        public BeamsBase(IRenderer<string> renderer)
+        protected BeamsBase(IRenderer<string> renderer)
         {
             _renderer = renderer;
             _beams = new List<BeamBase>();
@@ -48,18 +49,17 @@ namespace SpaceInvaders.Models.Entities.Base
         {
             _renderer.SetColor(ConsoleColor.Yellow);
 
-            foreach (var beam in _beams)
-                beam.Render();
+            _beams.ForEach(b=>b.Render());
+        }
+
+        public void Unrender()
+        {
+            _beams.ForEach(b=>b.Unrender());
         }
 
         public List<BeamBase> GetBeams()
         {
             return _beams;
-        }
-
-        public void Unrender()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

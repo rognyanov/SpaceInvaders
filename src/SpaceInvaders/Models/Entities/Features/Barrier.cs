@@ -1,22 +1,23 @@
-﻿using System;
-using SpaceInvaders.Contracts;
-using SpaceInvaders.Models.Entities.Base;
-using SpaceInvaders.Models.Grid;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Features;
+using SpaceInvaders.Contracts.Visual;
+using System;
 
 namespace SpaceInvaders.Models.Entities.Features
 {
-    public class Barrier : GameObject
+    public sealed class Barrier : IBarrier
     {
+        public IPosition Position { get; }
+
         private const int BARRIER_HEIGHT = 4;
         private const int BARRIER_WIDTH = 8;
+        private readonly string[] _image;
+        private readonly int[][] _barrierGrid;
         private readonly IRenderer<string> _renderer;
-        private string[] _image;
-        private int[][] _barrierGrid;
-        
 
-        public Barrier(int x, int y, IRenderer<string> renderer)
-        : base(new ConsolePosition(x, y))
+        public Barrier(IPosition position, IRenderer<string> renderer)
         {
+            Position = position;
             _renderer = renderer;
 
             _image = new string[]
@@ -29,13 +30,13 @@ namespace SpaceInvaders.Models.Entities.Features
 
             _barrierGrid = new int[BARRIER_WIDTH][];
 
-            for (int i = 0; i < BARRIER_HEIGHT; i++)
+            for (var row = 0; row < BARRIER_HEIGHT; row++)
             {
-                _barrierGrid[i] = new int[BARRIER_WIDTH];
+                _barrierGrid[row] = new int[BARRIER_WIDTH];
 
-                for (int j = 0; j < BARRIER_WIDTH; j++)
+                for (var col = 0; col < BARRIER_WIDTH; col++)
                 {
-                    _barrierGrid[i][j] = 1;
+                    _barrierGrid[row][col] = 1;
                 }
             }
 
@@ -43,19 +44,22 @@ namespace SpaceInvaders.Models.Entities.Features
             _barrierGrid[0][7] = 0;
         }
 
-        public override void Render()
+        public void Render()
         {
             _renderer.SetColor(ConsoleColor.Red);
 
-            for (int i = 0; i < BARRIER_HEIGHT; i++)
+            for (var i = 0; i < BARRIER_HEIGHT; i++)
             {
-                _renderer.DrawAtPosition(Position.X,Position.Y+i-1, _image[i]);
+                _renderer.DrawAtPosition(Position.X, Position.Y + i - 1, _image[i]);
             }
         }
 
-        public override void Unrender()
+        public void Unrender()
         {
-            throw new NotImplementedException();
+            for (var i = 0; i < BARRIER_HEIGHT; i++)
+            {
+                _renderer.DrawAtPosition(Position.X, Position.Y + i - 1, " ");
+            }
         }
 
         public bool IsSet(IPosition beamPosition)
@@ -65,7 +69,7 @@ namespace SpaceInvaders.Models.Entities.Features
             if (beamPosition.X >= Position.X
                 && beamPosition.X < Position.X + BARRIER_WIDTH)
             {
-                if (_barrierGrid[beamPosition.Y - Position.Y+1][beamPosition.X - Position.X] == 1)
+                if (_barrierGrid[beamPosition.Y - Position.Y + 1][beamPosition.X - Position.X] == 1)
                 {
                     result = true;
                 }

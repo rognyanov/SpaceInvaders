@@ -1,25 +1,26 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Features;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Visual;
 using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
 
 namespace SpaceInvaders.Models.Entities.Features
 {
-    public class ExtraLife
+    public sealed class ExtraLife : IExtraLife
     {
         private readonly IRenderer<string> _renderer;
-        private readonly GameHeader _gameHeader;
+        private readonly IGameHeader _gameHeader;
         private const int EXTRA_LIFE_SCORE = 20000;
         private const int EXTRA_LIFE_TIME = 50;
         private const int LIFE_BLINKER_INTERVAL = 8;
-        private Timer _counter;
-        private Timer _lifeBlinker;
-        private TextBlinker _blinker;
+        private readonly Timer _counter;
+        private readonly Timer _lifeBlinker;
+        private readonly TextBlinker _blinker;
         private bool _isDisplayed;
         private bool _displayLife;
         private int _nextExtraLifeScore;
 
-        public ExtraLife(IRenderer<string> renderer, GameHeader gameHeader)
+        public ExtraLife(IRenderer<string> renderer, IGameHeader gameHeader)
         {
             _renderer = renderer;
             _gameHeader = gameHeader;

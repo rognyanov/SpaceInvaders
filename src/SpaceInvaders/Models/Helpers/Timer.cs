@@ -1,6 +1,6 @@
 ﻿namespace SpaceInvaders.Models.Helpers
 {
-    public class Timer
+    public sealed class Timer
     {
         private readonly int _limit;
         private int _counter;

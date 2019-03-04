@@ -1,13 +1,14 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
 using System;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
-    public class AdvancedEnemy : EnemyBase
+    public sealed class AdvancedEnemy : EnemyBase
     {
-        public AdvancedEnemy(int x, int y, ConsoleColor color, IRenderer<string> renderer)
-            : base(x, y, color, renderer)
+        public AdvancedEnemy(IPosition position, ConsoleColor color, IRenderer<string> renderer)
+            : base(position, color, renderer)
         {
             _image = new string[3]
             {

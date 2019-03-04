@@ -1,6 +1,9 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Enemies;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Enums;
 using SpaceInvaders.Models.Entities.Base;
+using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
 using System;
 using System.Collections.Generic;
@@ -8,7 +11,7 @@ using System.Linq;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
-    public class Enemies : IMovable
+    public sealed class Enemies : IEnemies
     {
         private const int Y_MIN = 32;
         private const int MOVE_UP_SPEED = 5;
@@ -19,14 +22,14 @@ namespace SpaceInvaders.Models.Entities.Enemies
         private const int MOVE_INIT_SPEED = 6;
         private const int MOVE_SPEED_INCREASE = 120;
 
-        private List<EnemyBase> _enemies;
+        private readonly List<EnemyBase> _enemies;
         private int _moveSpeed;
-        private Timer _moveSpeedIncrease;
+        private readonly Timer _moveSpeedIncrease;
         private Timer _moveTimer;
         private Timer _moveUpSteps;
         private Timer _moveUpSpeed;
         private MoveType _currentMove;
-        private IRenderer<string> _renderer;
+        private readonly IRenderer<string> _renderer;
 
         public Enemies(int level, IRenderer<string> renderer)
         {
@@ -133,15 +136,19 @@ namespace SpaceInvaders.Models.Entities.Enemies
             }
         }
 
-        public EnemyBase IsDestroyed(IPosition beamPosition)
+        public void Unrender()
         {
-            IPosition position = null;
+            _enemies.ForEach(e=>e.Unrender());
+        }
+
+        public bool IsDestroyed(IPosition beamPosition)
+        {
             EnemyBase temp = null;
-            bool isDestroyed = false;
+            var isDestroyed = false;
 
             foreach (var enemy in _enemies)
             {
-                position = enemy.Position;
+                var position = enemy.Position;
 
                 if (beamPosition.X >= position.X + 1
                     && beamPosition.X < position.X + 6
@@ -160,7 +167,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
                 _enemies.Remove(temp);
             }
 
-            return new EnemyBase(0, 0, ConsoleColor.White, _renderer, isDestroyed);
+            return isDestroyed;
         }
 
         public bool HasDestroyedShip(IPosition shipPosition)
@@ -189,6 +196,17 @@ namespace SpaceInvaders.Models.Entities.Enemies
             return _enemies.Count == 0;
         }
 
+        public void ResetMoveUp()
+        {
+            _moveUpSteps = new Timer(MOVE_UP_STEPS);
+            _moveUpSpeed = new Timer(MOVE_UP_SPEED);
+        }
+
+        public List<IPosition> GetPositions()
+        {
+            return _enemies.Select(e => e.Position).ToList();
+        }
+
         private void InitEnemies(int level)
         {
             var counter = 0;
@@ -211,12 +229,12 @@ namespace SpaceInvaders.Models.Entities.Enemies
             {
                 var x = i * 8 + 1;
 
-                _enemies.Add(new StandartEnemy(x, 10, ConsoleColor.Green, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 14, ConsoleColor.Yellow, _renderer));
-                _enemies.Add(new HardEnemy(x, 18, ConsoleColor.Red, _renderer));
-                _enemies.Add(new StandartEnemy(x, 22, ConsoleColor.Blue, _renderer));
-                _enemies.Add(new AdvancedEnemy(x, 26, ConsoleColor.Cyan, _renderer));
-                _enemies.Add(new HardEnemy(x, 30, ConsoleColor.Magenta, _renderer));
+                _enemies.Add(new StandartEnemy(new ConsolePosition( x, 10), ConsoleColor.Green, _renderer));
+                _enemies.Add(new AdvancedEnemy(new ConsolePosition(x, 14), ConsoleColor.Yellow, _renderer));
+                _enemies.Add(new HardEnemy(new ConsolePosition(x, 18), ConsoleColor.Red, _renderer));
+                _enemies.Add(new StandartEnemy(new ConsolePosition(x, 22), ConsoleColor.Blue, _renderer));
+                _enemies.Add(new AdvancedEnemy(new ConsolePosition(x, 26), ConsoleColor.Cyan, _renderer));
+                _enemies.Add(new HardEnemy(new ConsolePosition(x, 30), ConsoleColor.Magenta, _renderer));
             }
         }
 
@@ -234,17 +252,6 @@ namespace SpaceInvaders.Models.Entities.Enemies
             }
 
             enemiesToDelete.ForEach(e => _enemies.Remove(e));
-        }
-
-        public void ResetMoveUp()
-        {
-            _moveUpSteps = new Timer(MOVE_UP_STEPS);
-            _moveUpSpeed = new Timer(MOVE_UP_SPEED);
-        }
-
-        public List<IPosition> GetPositions()
-        {
-            return _enemies.Select(e => e.Position).ToList();
         }
     }
 }

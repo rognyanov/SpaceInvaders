@@ -1,4 +1,4 @@
-﻿namespace SpaceInvaders.Contracts
+﻿namespace SpaceInvaders.Contracts.Base
 {
     public interface IMovable
     {

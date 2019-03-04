@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SpaceInvaders.Contracts
+namespace SpaceInvaders.Contracts.Visual
 {
     public interface IRenderer<TElement>
     {

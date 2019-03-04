@@ -1,19 +1,22 @@
-﻿using System;
-using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Features;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Enums;
 using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
+using System;
 
 namespace SpaceInvaders.Models.Entities.Features
 {
-    public class Ufo
+    public sealed class Ufo : IUfo
     {
-        enum State
+        private enum State
         {
             Waiting,
             Flying
         }
 
+        public IPosition Position { get; private set; }
         private readonly IRenderer<string> _renderer;
         private const int INIT_X = 0;
         private const int INIT_Y = 7;
@@ -23,19 +26,18 @@ namespace SpaceInvaders.Models.Entities.Features
         private const int WAITING_TIME = 1000; //Bigger value => more waiting for ufo to appear
         private const int MOVE_SPEED = 2;
         private const int RIGHT_BOUNDARY = 91;
-        private IPosition _position;
-        private string[] _image;
-        private string[] _secondImage;
+        private readonly string[] _image;
+        private readonly string[] _secondImage;
         private int _animationIndex;
-        private Timer _timer;
-        private Timer _waitTimer;
-        private Timer _moveTimer;
+        private readonly Timer _timer;
+        private readonly Timer _waitTimer;
+        private readonly Timer _moveTimer;
         private State _state;
 
         public Ufo(IRenderer<string> renderer)
         {
             _renderer = renderer;
-            _position = new ConsolePosition(INIT_X, INIT_Y);
+            Position = new ConsolePosition(INIT_X, INIT_Y);
             _animationIndex = 0;
             _timer = new Timer(ANIMATION_SPEED);
             _waitTimer = new Timer(WAITING_TIME);
@@ -71,19 +73,14 @@ namespace SpaceInvaders.Models.Entities.Features
 
         public bool IsDestroyed(IPosition beamPosition)
         {
-            if (beamPosition.X > _position.X
-                && beamPosition.X < _position.X +8
-                && beamPosition.Y == _position.Y+1)
+            if (beamPosition.X > Position.X
+                && beamPosition.X < Position.X +8
+                && beamPosition.Y == Position.Y+1)
             {
                 return true;
             }
 
             return false;
-        }
-
-        public IPosition GetPosition()
-        {
-            return _position;
         }
 
         public void Render()
@@ -111,9 +108,15 @@ namespace SpaceInvaders.Models.Entities.Features
                         else
                             _renderer.SetColor(ConsoleColor.DarkMagenta);
                     }
-                    _renderer.DrawAtPosition(_position.X + j, _position.Y + i, _image[i][j].ToString());
+                    _renderer.DrawAtPosition(Position.X + j, Position.Y + i, _image[i][j].ToString());
                 }
             }
+        }
+
+        public void Unrender()
+        {
+            _renderer.DrawAtPosition(Position.X, Position.Y, "        ");
+            _renderer.DrawAtPosition(Position.X, Position.Y + 1, "        ");
         }
 
         private void Waiting()
@@ -129,24 +132,18 @@ namespace SpaceInvaders.Models.Entities.Features
             if (_moveTimer.IsCounting())
                 return;
 
-            _position.Move(MoveType.Right);
+            Position.Move(MoveType.Right);
 
-            if (_position.X >= RIGHT_BOUNDARY)
+            if (Position.X >= RIGHT_BOUNDARY)
             {
                 Unrender();
-                while (_position.X > 0)
+                while (Position.X > 0)
                 {
-                    _position.Move(MoveType.Left);
+                    Position.Move(MoveType.Left);
                 }
 
                 _state = State.Waiting;
             }
-        }
-
-        public void Unrender()
-        {
-            _renderer.DrawAtPosition(_position.X, _position.Y, "        ");
-            _renderer.DrawAtPosition(_position.X, _position.Y + 1, "        ");
         }
     }
 }

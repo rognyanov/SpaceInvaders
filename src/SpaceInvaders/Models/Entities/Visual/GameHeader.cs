@@ -1,9 +1,9 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Visual;
 using System;
 
 namespace SpaceInvaders.Models.Entities.Visual
 {
-    public class GameHeader
+    public sealed class GameHeader : IGameHeader
     {
         public const int SCORE_X = 8;
         public const int SCORE_Y = 2;
@@ -15,11 +15,10 @@ namespace SpaceInvaders.Models.Entities.Visual
             _renderer = renderer;
         }
 
-        public void Render()
+        public void RenderHeader()
         {
             RenderLogo();
             RenderStatsLabels();
-            RenderStats(0, 1, 3);
         }
 
         public void RenderStats(int score, int level, int lifes)
@@ -62,7 +61,7 @@ namespace SpaceInvaders.Models.Entities.Visual
 
             _renderer.SetColor(ConsoleColor.White);
 
-            int index = 0;
+            var index = 0;
 
             if (number.Length < format)
             {

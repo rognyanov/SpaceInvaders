@@ -1,51 +1,61 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Enemies;
+using SpaceInvaders.Contracts.Features;
+using SpaceInvaders.Contracts.Player;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
 using SpaceInvaders.Models.Entities.Enemies;
+using SpaceInvaders.Models.Entities.Features;
 using SpaceInvaders.Models.Entities.Ship;
 using SpaceInvaders.Models.Entities.Visual;
 using SpaceInvaders.Models.Grid;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using SpaceInvaders.Models.Entities.Features;
 using Timer = SpaceInvaders.Models.Helpers.Timer;
 
 namespace SpaceInvaders.Models
 {
-    public class SpaceInvadersConsoleGame
+    public sealed class SpaceInvadersConsoleGame : IConsoleGame
     {
         private const int DELAY = 20;
         private const int INIT_LIFES = 3;
+        private const int INIT_LEVEL = 1;
+        private const int INIT_SCORE = 0;
+
         private readonly IRenderer<string> _renderer;
         private bool _isGameOver;
         private int _score;
         private int _lifes;
         private int _level;
-        private Ship _ship;
-        private Enemies _enemies;
+        private IShip _ship;
+        private IEnemies _enemies;
         private EnemyBeams _enemyBeams;
-        private GameHeader _gameHeader;
-        private ExtraLife _extraLife;
-        private Ufo _ufo;
-        private Barriers _barriers;
+        private readonly IGameHeader _gameHeader;
+        private readonly IExtraLife _extraLife;
+        private IUfo _ufo;
+        private readonly IBarriers _barriers;
 
         public SpaceInvadersConsoleGame(IRenderer<string> renderer)
         {
             _renderer = renderer;
             _isGameOver = false;
-            _score = 0;
+            _score = INIT_SCORE;
             _lifes = INIT_LIFES;
-            _level = 1;
-            _ship = new Ship(_renderer);
+            _level = INIT_LEVEL;
+            _ship = new Ship(new ConsolePosition(45,57), _renderer);
             _enemies = new Enemies(_level, _renderer);
             _enemyBeams = new EnemyBeams(_level, _renderer);
             _gameHeader = new GameHeader(_renderer);
             _extraLife = new ExtraLife(_renderer, _gameHeader);
             _ufo = new Ufo(_renderer);
             _barriers = new Barriers(_renderer);
+
             PrepareConsole();
-            _gameHeader.Render();
+
+            _gameHeader.RenderHeader();
             _gameHeader.RenderStats(_score, _level, _lifes);
+
             _barriers.Render();
         }
 
@@ -58,6 +68,7 @@ namespace SpaceInvaders.Models
 
                 // We summon UFO
                 _ufo.Invoke();
+
                 // UFO destroyed check
                 CheckIfUfoIsDestroyed();
 
@@ -68,7 +79,6 @@ namespace SpaceInvaders.Models
 
                     //Init next level
                     InitNextLevel();
-                    _gameHeader.RenderStats(_score, _level, _lifes);
                 }
 
                 // Invoke enemy beams
@@ -90,8 +100,8 @@ namespace SpaceInvaders.Models
                 //Delete barrier parts if hit by ship or enemy
                 CheckIfBarrierPartIsDestroyed();
 
-                //Update score
-                _gameHeader.RenderScore(_score);
+                //Update stats
+                _gameHeader.RenderStats(_score, _level, _lifes);
 
                 //Short delay
                 Delay();
@@ -106,13 +116,38 @@ namespace SpaceInvaders.Models
             GameOver();
         }
 
+        private void RenderEntities()
+        {
+            _ship.Render();
+            _ship.RenderBeams();
+            _enemies.Render();
+            _enemyBeams.Render();
+            _ufo.Render();
+        }
+
+        private void Move()
+        {
+            _ship.Move();
+            _ship.MoveBeams();
+            _enemies.Move();
+            _enemyBeams.Move();
+        }
+
+        private void InitNextLevel()
+        {
+            _ship = new Ship(new ConsolePosition(45, 57),_renderer);
+            _enemies = new Enemies(_level, _renderer);
+            _enemyBeams = new EnemyBeams(_level, _renderer);
+            //_ufo = new Ufo(_renderer);
+        }
+
         private void ExtraLifeCheck()
         {
-            if (_extraLife.Invoke(_score, _lifes))
-            {
-                _lifes++;
-                _gameHeader.RenderLifes(_lifes);
-            }
+            if (!_extraLife.Invoke(_score, _lifes))
+                return;
+
+            _lifes++;
+            _gameHeader.RenderLifes(_lifes);
         }
 
         private void CheckIfUfoIsDestroyed()
@@ -120,18 +155,18 @@ namespace SpaceInvaders.Models
             if (_ufo.IsNotFlying())
                 return;
 
-            var beams = _ship.GetBeams();
+            var shipBeams = _ship.GetBeams();
             var beamsToDelete = new List<BeamBase>();
 
-            foreach (var beam in beams)
+            foreach (var beam in shipBeams)
             {
-                if (_ufo.IsDestroyed(beam.Position))
-                {
-                    beamsToDelete.Add(beam);
-                    _ufo.Unrender();
-                    _ufo = new Ufo(_renderer);
-                    _score += 1000;
-                }
+                if (!_ufo.IsDestroyed(beam.Position))
+                    continue;
+
+                beamsToDelete.Add(beam);
+                _ufo.Unrender();
+                _ufo = new Ufo(_renderer);
+                _score += 1000;
             }
 
             _ship.DeleteBeams(beamsToDelete);
@@ -180,13 +215,6 @@ namespace SpaceInvaders.Models
             _renderer.DrawAtPosition(39, 24, "                          ");
         }
 
-        private void InitNextLevel()
-        {
-            _ship = new Ship(_renderer);
-            _enemies = new Enemies(_level, _renderer);
-            _ufo = new Ufo(_renderer);
-        }
-
         private void GameOver()
         {
             _renderer.DrawAtPosition(42, 15, "G A M E   O V E R!");
@@ -195,29 +223,28 @@ namespace SpaceInvaders.Models
         private void ShipDestroyed()
         {
             _lifes--;
-
             _enemies.Render();
             _ship.Unrender();
 
             LifeLost();
-
-            _gameHeader.RenderStats(_score, _level, _lifes);
         }
 
         private void CheckIfBarrierPartIsDestroyed()
         {
-            List<BeamBase> beamsToDelete = new List<BeamBase>();
+            var beamsToDelete = new List<BeamBase>();
 
             foreach (var beam in _ship.GetBeams())
             {
                 var beamPos = beam.Position;
 
-                if (beamPos.Y > 49 && beamPos.Y < 54)
-                    if (_barriers.DeleteBarrierPart(beam.Position))
-                    {
-                        beamsToDelete.Add(beam);
-                        beam.Unrender();
-                    }
+                if (beamPos.Y <= 49 || beamPos.Y >= 54)
+                    continue;
+
+                if (!_barriers.IsBarrierPartDestroyed(beam.Position))
+                    continue;
+
+                beamsToDelete.Add(beam);
+                beam.Unrender();
             }
             _ship.DeleteBeams(beamsToDelete);
 
@@ -225,14 +252,12 @@ namespace SpaceInvaders.Models
             foreach (var beam in _enemyBeams.GetBeams())
             {
                 var beamPos = beam.Position;
-                if (beamPos.Y>49 & beamPos.Y<54)
-                {
-                    if (_barriers.DeleteBarrierPart(beamPos))
-                    {
-                        beamsToDelete.Add(beam);
-                        beam.Unrender();
-                    }
-                }
+
+                if (!(beamPos.Y > 49 & beamPos.Y < 54)) continue;
+                if (!_barriers.IsBarrierPartDestroyed(beamPos)) continue;
+
+                beamsToDelete.Add(beam);
+                beam.Unrender();
             }
 
             _enemyBeams.DeleteBeams(beamsToDelete);
@@ -265,68 +290,40 @@ namespace SpaceInvaders.Models
                 _enemyBeams.Move();
                 _ufo.Invoke();
 
-                if (!blinkCounter.IsCounting())
+                if (blinkCounter.IsCounting())
+                    continue;
+
+                if (displayLifes)
                 {
-                    if (displayLifes)
-                    {
-                        displayLifes = false;
-                        _gameHeader.RenderLifes(_lifes + 1);
-                    }
-                    else
-                    {
-                        displayLifes = true;
-                        _gameHeader.UnrenderLifes();
-                    }
+                    displayLifes = false;
+                    _gameHeader.RenderLifes(_lifes + 1);
+                }
+                else
+                {
+                    displayLifes = true;
+                    _gameHeader.UnrenderLifes();
                 }
             }
-
-            _gameHeader.RenderLifes(_lifes);
-        }
-
-        private void RenderEntities()
-        {
-            _ship.Render();
-            _ship.RenderBeams();
-            _enemies.Render();
-            _enemyBeams.Render();
-            _ufo.Render();
-        }
-
-        private void Delay(int delay = DELAY)
-        {
-            Thread.Sleep(delay);
-        }
-
-        private void Move()
-        {
-            _ship.Move();
-            _ship.MoveBeams();
-            _enemies.Move();
-            _enemyBeams.Move();
         }
 
         private void CheckIfShipDestroyedEnemy()
         {
-            EnemyBase enemyEntitiy;
-            List<BeamBase> beams;
             var beamsToDelete = new List<BeamBase>();
 
-            beams = _ship.GetBeams();
-            if (beams.Count > 0)
-            {
-                foreach (var beam in beams)
-                {
-                    enemyEntitiy = _enemies.IsDestroyed(beam.Position);
-                    if (enemyEntitiy.IsDestroyed)
-                    {
-                        beamsToDelete.Add(beam);
-                        _score += 100;
-                        _gameHeader.RenderScore(_score);
-                    }
-                }
+            var beams = _ship.GetBeams();
+            if (beams.Count <= 0)
+                return;
 
-                _ship.DeleteBeams(beamsToDelete);
+            foreach (var beam in beams)
+            {
+                if (!_enemies.IsDestroyed(beam.Position))
+                    continue;
+
+                beamsToDelete.Add(beam);
+                _score += 100;
             }
+
+            _ship.DeleteBeams(beamsToDelete);
         }
 
         private bool CheckIfEnemeyDestroyedShip()
@@ -343,12 +340,17 @@ namespace SpaceInvaders.Models
             return _enemies.IsEmpty();
         }
 
-        internal void PrepareConsole()
+        private static void PrepareConsole()
         {
             Console.SetWindowSize(100, 60);
             Console.BackgroundColor = ConsoleColor.Black;
             Console.CursorVisible = false;
             Console.Clear();
+        }
+
+        private static void Delay(int delay = DELAY)
+        {
+            Thread.Sleep(delay);
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Visual;
 using System;
 
 namespace SpaceInvaders.Models.Grid
 {
-    public class ConsoleRenderer : IRenderer<string>
+    public sealed class ConsoleRenderer : IRenderer<string>
     {
         private ConsoleColor _color;
 

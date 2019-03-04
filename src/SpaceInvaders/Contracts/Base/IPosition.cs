@@ -1,6 +1,6 @@
 ﻿using SpaceInvaders.Enums;
 
-namespace SpaceInvaders.Contracts
+namespace SpaceInvaders.Contracts.Base
 {
     public interface IPosition
     {
@@ -8,6 +8,5 @@ namespace SpaceInvaders.Contracts
         int Y { get; }
 
         void Move(MoveType type);
-        void ReInitialize();
     }
 }

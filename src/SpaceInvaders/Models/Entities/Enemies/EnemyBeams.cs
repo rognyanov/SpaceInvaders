@@ -1,12 +1,15 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Enemies;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
+using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
 using System;
 using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Enemies
 {
-    public class EnemyBeams : BeamsBase
+    public sealed class EnemyBeams : BeamsBase, IEnemyBeams
     {
         private const int MOVE_SPEED = 2;
         private const int LOWER_BOUNDARY = 59;
@@ -30,7 +33,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             var x = positions[index].X + 3;
             var y = positions[index].Y + 3;
 
-            _beams.Add(new EnemyBeam(x, y));
+            _beams.Add(new EnemyBeam(new ConsolePosition(x,y)));
         }
 
         public bool HasDestroyedShip(IPosition shipPosition)
@@ -42,22 +45,14 @@ namespace SpaceInvaders.Models.Entities.Enemies
             {
                 var pos = beam.Position;
 
-                if ((pos.X > shipPosition.X + 2
-                    && pos.X < shipPosition.X + 4
-                    && pos.Y == shipPosition.Y)
-                    ||
-                    (pos.X > shipPosition.X + 1
-                     && pos.X < shipPosition.X + 5
-                     && pos.Y == shipPosition.Y + 1)
-                    ||
-                    (pos.X > shipPosition.X
-                     && pos.X < shipPosition.X + 6
-                     && pos.Y == shipPosition.Y + 2))
-                {
-                    beamsToDelete.Add(beam);
-                    beam.Unrender();
-                    result = true;
-                }
+                if ((pos.X <= shipPosition.X + 2 || pos.X >= shipPosition.X + 4 || pos.Y != shipPosition.Y) &&
+                    (pos.X <= shipPosition.X + 1 || pos.X >= shipPosition.X + 5 || pos.Y != shipPosition.Y + 1) &&
+                    (pos.X <= shipPosition.X || pos.X >= shipPosition.X + 6 || pos.Y != shipPosition.Y + 2))
+                    continue;
+
+                beamsToDelete.Add(beam);
+                beam.Unrender();
+                result = true;
             }
 
             beamsToDelete.ForEach(b => _beams.Remove(b));
@@ -67,10 +62,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
 
         public void DeleteBeams(List<BeamBase> beams)
         {
-            foreach (var beam in beams)
-            {
-                _beams.Remove(beam);
-            }
+            beams.ForEach(b=>_beams.Remove(b));
         }
     }
 }

@@ -1,13 +1,17 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Enemies;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Enums;
-using System;
-using SpaceInvaders.Models.Grid;
 using SpaceInvaders.Models.Helpers;
+using System;
 
 namespace SpaceInvaders.Models.Entities.Base
 {
-    public class EnemyBase : GameObject, IEnemyMovable, IDestroyable
+    public abstract class EnemyBase : IGameObject, IEnemyMovable, IDestroyable, IRenderable
     {
+        public IPosition Position { get; }
+        public bool IsDestroyed { get; }
+
         private const int ANIMATIONS_INIT_SPEED = 12;
         private const int SPRITE_HEIGHT = 3;
         private const int SPRITE_WIDTH = 7;
@@ -16,14 +20,13 @@ namespace SpaceInvaders.Models.Entities.Base
         protected string[] _secondImage;
         protected IRenderer<string> _renderer;
         protected ConsoleColor _color;
-        private Timer _animationTimer;
-        private bool _switchImage = false;
+        private readonly Timer _animationTimer;
+        private bool _switchImage;
 
-        public bool IsDestroyed { get; private set; }
-
-        public EnemyBase(int x, int y, ConsoleColor color, IRenderer<string> renderer, bool isDestoryed = false)
-            :base(new ConsolePosition(x,y))
+        protected EnemyBase(IPosition position, ConsoleColor color, IRenderer<string> renderer, bool isDestoryed = false)
+            :base()
         {
+            Position = position;
             _renderer = renderer;
             _color = color;
             _animationTimer = new Timer(ANIMATIONS_INIT_SPEED);
@@ -42,7 +45,7 @@ namespace SpaceInvaders.Models.Entities.Base
             Position.Move(move);
         }
 
-        public override void Render()
+        public void Render()
         {
             if (!_animationTimer.IsCounting())
                 _switchImage = !_switchImage;
@@ -55,15 +58,10 @@ namespace SpaceInvaders.Models.Entities.Base
                     _renderer.DrawAtPosition(Position.X + col, Position.Y + row, image[row][col].ToString());
         }
 
-        public override void Unrender()
+        public void Unrender()
         {
             for (var row = 0; row < SPRITE_HEIGHT; row++)
                 _renderer.DrawAtPosition(Position.X, Position.Y + row, "       ");
-        }
-
-        public void IncreaseY()
-        {
-            Position.Move(MoveType.Down);
         }
 
         public void DecreaseY()

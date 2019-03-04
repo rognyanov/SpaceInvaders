@@ -1,18 +1,21 @@
-﻿using SpaceInvaders.Contracts;
+﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Enums;
 using System;
 
 namespace SpaceInvaders.Models.Entities.Base
 {
-    public abstract class BeamBase : GameObject, IMovable
+    public abstract class BeamBase : IGameObject, IMovable, IRenderable
     {
+        public IPosition Position { get; }
+
         protected int _increment;
         protected char _beam;
         protected IRenderer<string> _renderer;
 
         protected BeamBase(IPosition position, IRenderer<string> renderer)
-            : base(position)
         {
+            Position = position;
             _renderer = renderer;
         }
 
@@ -22,13 +25,13 @@ namespace SpaceInvaders.Models.Entities.Base
             Position.Move(_increment == 1 ? MoveType.Down : MoveType.Up);
         }
 
-        public override void Render()
+        public void Render()
         {
             _renderer.SetColor(ConsoleColor.Yellow);
             _renderer.DrawAtPosition(Position.X, Position.Y, _beam.ToString());
         }
 
-        public override void Unrender()
+        public void Unrender()
         {
             _renderer.DrawAtPosition(Position.X, Position.Y, " ");
         }

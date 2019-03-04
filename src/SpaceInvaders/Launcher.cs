@@ -3,9 +3,9 @@ using SpaceInvaders.Models.Grid;
 
 namespace SpaceInvaders
 {
-    class Launcher
+    public class Launcher
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var game = new SpaceInvadersConsoleGame(new ConsoleRenderer());
             game.Play();
