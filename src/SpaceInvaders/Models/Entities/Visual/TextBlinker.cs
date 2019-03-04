@@ -22,6 +22,7 @@ namespace SpaceInvaders.Models.Entities.Visual
             _diplayText = false;
         }
 
+        /// <inheritdoc />
         public void Invoke()
         {
             if (!_counter.IsCounting())

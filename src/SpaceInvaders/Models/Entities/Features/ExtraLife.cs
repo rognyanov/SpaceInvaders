@@ -30,6 +30,7 @@ namespace SpaceInvaders.Models.Entities.Features
             _nextExtraLifeScore = EXTRA_LIFE_SCORE;
         }
 
+        /// <inheritdoc />
         public bool Invoke(int score, int lifes)
         {
             var result = false;

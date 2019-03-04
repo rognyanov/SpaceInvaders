@@ -45,6 +45,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             InitEnemies(level);
         }
 
+        /// <inheritdoc />
         public void Move()
         {
             var minX = 100;
@@ -97,6 +98,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             HasReachedBottom();
         }
 
+        /// <inheritdoc />
         public void MoveUp()
         {
             if (_moveUpSpeed.IsCounting())
@@ -125,6 +127,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             }
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             foreach (var enemy in _enemies)
@@ -136,11 +139,13 @@ namespace SpaceInvaders.Models.Entities.Enemies
             }
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             _enemies.ForEach(e=>e.Unrender());
         }
 
+        /// <inheritdoc />
         public bool IsDestroyed(IPosition beamPosition)
         {
             EnemyBase temp = null;
@@ -170,6 +175,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
             return isDestroyed;
         }
 
+        /// <inheritdoc />
         public bool HasDestroyedShip(IPosition shipPosition)
         {
             foreach (var enemy in _enemies)
@@ -191,17 +197,20 @@ namespace SpaceInvaders.Models.Entities.Enemies
             return false;
         }
 
+        /// <inheritdoc />
         public bool IsEmpty()
         {
             return _enemies.Count == 0;
         }
 
+        /// <inheritdoc />
         public void ResetMoveUp()
         {
             _moveUpSteps = new Timer(MOVE_UP_STEPS);
             _moveUpSpeed = new Timer(MOVE_UP_SPEED);
         }
 
+        /// <inheritdoc />
         public List<IPosition> GetPositions()
         {
             return _enemies.Select(e => e.Position).ToList();

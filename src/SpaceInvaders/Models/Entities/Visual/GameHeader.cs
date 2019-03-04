@@ -15,12 +15,14 @@ namespace SpaceInvaders.Models.Entities.Visual
             _renderer = renderer;
         }
 
+        /// <inheritdoc />
         public void RenderHeader()
         {
             RenderLogo();
             RenderStatsLabels();
         }
 
+        /// <inheritdoc />
         public void RenderStats(int score, int level, int lifes)
         {
             _renderer.SetColor(ConsoleColor.White);
@@ -30,26 +32,31 @@ namespace SpaceInvaders.Models.Entities.Visual
             RenderLifes(lifes);
         }
 
+        /// <inheritdoc />
         public void RenderScore(int score)
         {
             RenderNumber(score, 7, SCORE_X, SCORE_Y);
         }
 
+        /// <inheritdoc />
         public void RenderLevel(int level)
         {
             RenderNumber(level, 2, SCORE_X, SCORE_Y + 1);
         }
 
+        /// <inheritdoc />
         public void UnrenderLevel()
         {
             _renderer.DrawAtPosition(SCORE_X, SCORE_Y+1, "  ");
         }
 
+        /// <inheritdoc />
         public void RenderLifes(int lifes)
         {
             RenderNumber(lifes, 2, SCORE_X, SCORE_Y + 3);
         }
 
+        /// <inheritdoc />
         public void UnrenderLifes()
         {
             _renderer.DrawAtPosition(SCORE_X, SCORE_Y + 3, "  ");

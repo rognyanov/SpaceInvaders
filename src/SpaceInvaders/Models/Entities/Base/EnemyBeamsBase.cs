@@ -15,6 +15,7 @@ namespace SpaceInvaders.Models.Entities.Base
         {
         }
 
+        /// <inheritdoc />
         public void Invoke(List<IPosition> positions)
         {
             if (_beams.Count >= _maxBeamsCount)
@@ -28,6 +29,7 @@ namespace SpaceInvaders.Models.Entities.Base
             _beams.Add(new EnemyBeam(new ConsolePosition(x, y)));
         }
 
+        /// <inheritdoc />
         public bool HasDestroyedShip(IPosition shipPosition)
         {
             var result = false;
@@ -52,6 +54,7 @@ namespace SpaceInvaders.Models.Entities.Base
             return result;
         }
 
+        /// <inheritdoc />
         public void DeleteBeams(List<BeamBase> beams)
         {
             beams.ForEach(b => _beams.Remove(b));

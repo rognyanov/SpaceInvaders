@@ -58,6 +58,7 @@ namespace SpaceInvaders.Models.Entities.Features
             };
         }
 
+        /// <inheritdoc />
         public void Invoke()
         {
             if (_state == State.Waiting)
@@ -66,11 +67,13 @@ namespace SpaceInvaders.Models.Entities.Features
                 Flying();
         }
 
+        /// <inheritdoc />
         public bool IsNotFlying()
         {
             return _state != State.Flying;
         }
 
+        /// <inheritdoc />
         public bool IsDestroyed(IPosition beamPosition)
         {
             if (beamPosition.X > Position.X
@@ -83,6 +86,7 @@ namespace SpaceInvaders.Models.Entities.Features
             return false;
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             if (_state == State.Waiting)
@@ -113,6 +117,7 @@ namespace SpaceInvaders.Models.Entities.Features
             }
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             _renderer.DrawAtPosition(Position.X, Position.Y, "        ");

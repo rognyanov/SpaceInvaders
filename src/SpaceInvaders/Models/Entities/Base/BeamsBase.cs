@@ -22,6 +22,7 @@ namespace SpaceInvaders.Models.Entities.Base
             _beamsCount = 0;
         }
 
+        /// <inheritdoc />
         public void Move()
         {
             if (_moveTimer.IsCounting())
@@ -45,6 +46,7 @@ namespace SpaceInvaders.Models.Entities.Base
             }
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             _renderer.SetColor(ConsoleColor.Yellow);
@@ -52,11 +54,13 @@ namespace SpaceInvaders.Models.Entities.Base
             _beams.ForEach(b=>b.Render());
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             _beams.ForEach(b=>b.Unrender());
         }
 
+        /// <inheritdoc />
         public List<BeamBase> GetBeams()
         {
             return _beams;

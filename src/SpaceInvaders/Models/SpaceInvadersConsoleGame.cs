@@ -16,6 +16,9 @@ using Timer = SpaceInvaders.Models.Helpers.Timer;
 
 namespace SpaceInvaders.Models
 {
+    /// <summary>
+    /// Space invaders console game ready to be played.
+    /// </summary>
     public sealed class SpaceInvadersConsoleGame : IConsoleGame
     {
         private const int DELAY = 20;
@@ -36,6 +39,10 @@ namespace SpaceInvaders.Models
         private IUfo _ufo;
         private readonly IBarriers _barriers;
 
+        /// <summary>
+        /// Space invaders console game constructor.
+        /// </summary>
+        /// <param name="renderer">The class that can render stuff on the console.</param>
         public SpaceInvadersConsoleGame(IRenderer<string> renderer)
         {
             _renderer = renderer;
@@ -59,6 +66,9 @@ namespace SpaceInvaders.Models
             _barriers.Render();
         }
 
+        /// <summary>
+        /// This is the game cycle. Goes on until game over.
+        /// </summary>
         public void Play()
         {
             while (!_isGameOver)

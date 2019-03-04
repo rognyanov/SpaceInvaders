@@ -33,6 +33,7 @@ namespace SpaceInvaders.Models.Entities.Base
             IsDestroyed = isDestoryed;
         }
 
+        /// <inheritdoc />
         public void Move(MoveType move, bool increaseY)
         {
             if (increaseY)
@@ -45,6 +46,7 @@ namespace SpaceInvaders.Models.Entities.Base
             Position.Move(move);
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             if (!_animationTimer.IsCounting())
@@ -58,12 +60,14 @@ namespace SpaceInvaders.Models.Entities.Base
                     _renderer.DrawAtPosition(Position.X + col, Position.Y + row, image[row][col].ToString());
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             for (var row = 0; row < SPRITE_HEIGHT; row++)
                 _renderer.DrawAtPosition(Position.X, Position.Y + row, "       ");
         }
 
+        /// <inheritdoc />
         public void DecreaseY()
         {
             Position.Move(MoveType.Up);

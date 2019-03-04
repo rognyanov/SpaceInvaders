@@ -14,6 +14,7 @@ namespace SpaceInvaders.Models.Grid
             Y = y;
         }
 
+        /// <inheritdoc />
         public void Move(MoveType type)
         {
             switch (type)

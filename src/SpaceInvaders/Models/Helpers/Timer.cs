@@ -1,5 +1,8 @@
 ﻿namespace SpaceInvaders.Models.Helpers
 {
+    /// <summary>
+    /// Represents a ticking timer that is counting up to some limit
+    /// </summary>
     public sealed class Timer
     {
         private readonly int _limit;
@@ -11,6 +14,10 @@
             _counter = 0;
         }
 
+        /// <summary>
+        /// Check if the timer has reached the target limit
+        /// </summary>
+        /// <returns></returns>
         public bool IsCounting()
         {
             var result = true;

@@ -1,10 +1,10 @@
-﻿using SpaceInvaders.Contracts.Enemies;
-using SpaceInvaders.Models.Entities.Base;
-
-namespace SpaceInvaders.Contracts.Base
+﻿namespace SpaceInvaders.Contracts.Base
 {
     public interface IConsoleGame
     {
+        /// <summary>
+        /// Start the console game cycle.
+        /// </summary>
         void Play();
     }
 }

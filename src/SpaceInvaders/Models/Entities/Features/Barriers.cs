@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Features
 {
+    /// <summary>
+    /// Represents the barriers that protect the enemies and the ship
+    /// </summary>
     public sealed class Barriers : IBarriers
     {
         private const int BARRIERS_COUNT = 4;
@@ -15,6 +18,10 @@ namespace SpaceInvaders.Models.Entities.Features
 
         private readonly List<IBarrier> _barriers;
 
+        /// <summary>
+        /// Constructs the barriers
+        /// </summary>
+        /// <param name="renderer">The class that can render the game object.</param>
         public Barriers(IRenderer<string> renderer)
         {
             _barriers = new List<IBarrier>();
@@ -27,16 +34,27 @@ namespace SpaceInvaders.Models.Entities.Features
             }
         }
 
+        /// <summary>
+        /// Renders the barriers
+        /// </summary>
         public void Render()
         {
             _barriers.ForEach(b => b.Render());
         }
 
+        /// <summary>
+        /// Unrenders the barriers
+        /// </summary>
         public void Unrender()
         {
             _barriers.ForEach(b => b.Unrender());
         }
 
+        /// <summary>
+        /// Check if barrier part is destroyed
+        /// </summary>
+        /// <param name="beamPosition">The fired beam position</param>
+        /// <returns>Whether a part is destroyed</returns>
         public bool IsBarrierPartDestroyed(IPosition beamPosition)
         {
             var result = false;

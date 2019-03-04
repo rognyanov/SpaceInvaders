@@ -45,12 +45,14 @@ namespace SpaceInvaders.Models.Entities.Ship
             _moveTimer = new Timer(INIT_MOVE_SPEED);
         }
 
+        /// <inheritdoc />
         public void ReInitialize()
         {
             Position = new ConsolePosition(INIT_X, INIT_Y);
             _currentMove = MoveType.None;
         }
 
+        /// <inheritdoc />
         public void Move()
         {
             if (_moveTimer.IsCounting())
@@ -67,6 +69,7 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
+        /// <inheritdoc />
         public void ReadInput()
         {
             var info = new ConsoleKeyInfo();
@@ -95,6 +98,7 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             _renderer.SetColor(ConsoleColor.White);
@@ -109,6 +113,7 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             for (var i = 0; i < IMAGE_HEIGHT; i++)
@@ -120,21 +125,25 @@ namespace SpaceInvaders.Models.Entities.Ship
             }
         }
 
+        /// <inheritdoc />
         public void RenderBeams()
         {
             _beams.Render();
         }
 
+        /// <inheritdoc />
         public void MoveBeams()
         {
             _beams.Move();
         }
 
+        /// <inheritdoc />
         public List<BeamBase> GetBeams()
         {
             return _beams.GetBeams();
         }
 
+        /// <inheritdoc />
         public void DeleteBeams(List<BeamBase> beams)
         {
             _beams.DeleteBeams(beams);

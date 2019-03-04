@@ -44,6 +44,7 @@ namespace SpaceInvaders.Models.Entities.Features
             _barrierGrid[0][7] = 0;
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             _renderer.SetColor(ConsoleColor.Red);
@@ -54,6 +55,7 @@ namespace SpaceInvaders.Models.Entities.Features
             }
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             for (var i = 0; i < BARRIER_HEIGHT; i++)
@@ -62,6 +64,7 @@ namespace SpaceInvaders.Models.Entities.Features
             }
         }
 
+        /// <inheritdoc />
         public bool IsSet(IPosition beamPosition)
         {
             var result = false;
@@ -78,6 +81,7 @@ namespace SpaceInvaders.Models.Entities.Features
             return result;
         }
 
+        /// <inheritdoc />
         public void SetTaken(IPosition beamPosition)
         {
             _barrierGrid[beamPosition.Y - Position.Y + 1][beamPosition.X - Position.X] = 0;

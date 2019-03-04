@@ -19,18 +19,21 @@ namespace SpaceInvaders.Models.Entities.Base
             _renderer = renderer;
         }
 
+        /// <inheritdoc />
         public void Move()
         {
             Unrender();
             Position.Move(_increment == 1 ? MoveType.Down : MoveType.Up);
         }
 
+        /// <inheritdoc />
         public void Render()
         {
             _renderer.SetColor(ConsoleColor.Yellow);
             _renderer.DrawAtPosition(Position.X, Position.Y, _beam.ToString());
         }
 
+        /// <inheritdoc />
         public void Unrender()
         {
             _renderer.DrawAtPosition(Position.X, Position.Y, " ");
