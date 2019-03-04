@@ -17,24 +17,29 @@ namespace SpaceInvaders.Models.Entities.Enemies
         private const int RIGHT_BOUNDARY = 93;
         private const int BOTTOM_BOUNDARY = 55;
         private const int MOVE_INIT_SPEED = 6;
+        private const int MOVE_SPEED_INCREASE = 120;
 
         private List<EnemyBase> _enemies;
+        private int _moveSpeed;
+        private Timer _moveSpeedIncrease;
         private Timer _moveTimer;
         private Timer _moveUpSteps;
         private Timer _moveUpSpeed;
         private MoveType _currentMove;
         private IRenderer<string> _renderer;
 
-        public Enemies(IRenderer<string> renderer)
+        public Enemies(int level, IRenderer<string> renderer)
         {
             _enemies = new List<EnemyBase>();
             _moveTimer = new Timer(MOVE_INIT_SPEED);
             _moveUpSteps = new Timer(MOVE_UP_STEPS);
             _moveUpSpeed = new Timer(MOVE_UP_SPEED);
+            _moveSpeed = MOVE_INIT_SPEED;
+            _moveSpeedIncrease = new Timer(MOVE_SPEED_INCREASE);
             _renderer = renderer;
             _currentMove = MoveType.Right;
 
-            InitEnemies();
+            InitEnemies(level);
         }
 
         public void Move()
@@ -45,6 +50,15 @@ namespace SpaceInvaders.Models.Entities.Enemies
 
             if (_moveTimer.IsCounting())
                 return;
+
+            if (!_moveSpeedIncrease.IsCounting())
+            {
+                if (_moveSpeed > 0)
+                {
+                    _moveSpeed--;
+                    _moveTimer = new Timer(_moveSpeed);
+                }
+            }
 
             foreach (var enemy in _enemies)
             {
@@ -87,7 +101,7 @@ namespace SpaceInvaders.Models.Entities.Enemies
 
             if (_moveUpSteps.IsCounting())
                 return;
-            
+
             var min = 60;
 
             foreach (var enemy in _enemies)
@@ -175,9 +189,25 @@ namespace SpaceInvaders.Models.Entities.Enemies
             return _enemies.Count == 0;
         }
 
-        private void InitEnemies()
+        private void InitEnemies(int level)
         {
-            for (var i = 0; i < 6; i++)
+            var counter = 0;
+            var moreEnemies = 0;
+
+            for (int i = 0; i < level; i++)
+            {
+                counter++;
+                if (counter == 4)
+                {
+                    counter = 0;
+
+                    if (moreEnemies < 5)
+                        moreEnemies++;
+                }
+            }
+            var rowsOfEnemeies = 6 + moreEnemies;
+
+            for (var i = 0; i < rowsOfEnemeies; i++)
             {
                 var x = i * 8 + 1;
 

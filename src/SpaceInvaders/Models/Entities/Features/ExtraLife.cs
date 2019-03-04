@@ -9,7 +9,7 @@ namespace SpaceInvaders.Models.Entities.Features
     {
         private readonly IRenderer<string> _renderer;
         private readonly GameHeader _gameHeader;
-        private const int EXTRA_LIFE_SCORE = 10000;
+        private const int EXTRA_LIFE_SCORE = 20000;
         private const int EXTRA_LIFE_TIME = 50;
         private const int LIFE_BLINKER_INTERVAL = 8;
         private Timer _counter;

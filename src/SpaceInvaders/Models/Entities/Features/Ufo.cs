@@ -20,7 +20,7 @@ namespace SpaceInvaders.Models.Entities.Features
         private const int UFO_HEIGHT = 2;
         private const int UFO_WIDTH = 8;
         private const int ANIMATION_SPEED = 8;
-        private const int WAITING_TIME = 300;
+        private const int WAITING_TIME = 1000; //Bigger value => more waiting for ufo to appear
         private const int MOVE_SPEED = 2;
         private const int RIGHT_BOUNDARY = 91;
         private IPosition _position;

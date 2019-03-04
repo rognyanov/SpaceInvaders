@@ -27,6 +27,7 @@ namespace SpaceInvaders.Models
         private GameHeader _gameHeader;
         private ExtraLife _extraLife;
         private Ufo _ufo;
+        private Barriers _barriers;
 
         public SpaceInvadersConsoleGame(IRenderer<string> renderer)
         {
@@ -36,13 +37,16 @@ namespace SpaceInvaders.Models
             _lifes = INIT_LIFES;
             _level = 1;
             _ship = new Ship(_renderer);
-            _enemies = new Enemies(_renderer);
-            _enemyBeams = new EnemyBeams(_renderer);
+            _enemies = new Enemies(_level, _renderer);
+            _enemyBeams = new EnemyBeams(_level, _renderer);
             _gameHeader = new GameHeader(_renderer);
             _extraLife = new ExtraLife(_renderer, _gameHeader);
             _ufo = new Ufo(_renderer);
+            _barriers = new Barriers(_renderer);
             PrepareConsole();
             _gameHeader.Render();
+            _gameHeader.RenderStats(_score, _level, _lifes);
+            _barriers.Render();
         }
 
         public void Play()
@@ -82,6 +86,9 @@ namespace SpaceInvaders.Models
 
                 //Extra life
                 ExtraLifeCheck();
+
+                //Delete barrier parts if hit by ship or enemy
+                CheckIfBarrierPartIsDestroyed();
 
                 //Update score
                 _gameHeader.RenderScore(_score);
@@ -143,6 +150,8 @@ namespace SpaceInvaders.Models
                 levelBlinker.Invoke();
                 bonusBlinker.Invoke();
                 _ship.RenderBeams();
+                _enemyBeams.Render();
+                _ufo.Render();
 
                 if (!scoreCounter.IsCounting())
                 {
@@ -158,6 +167,8 @@ namespace SpaceInvaders.Models
                 _gameHeader.RenderScore(_score);
                 Delay();
                 _ship.MoveBeams();
+                _enemyBeams.Move();
+                _ufo.Invoke();
             }
 
             _level++;
@@ -172,7 +183,8 @@ namespace SpaceInvaders.Models
         private void InitNextLevel()
         {
             _ship = new Ship(_renderer);
-            _enemies = new Enemies(_renderer);
+            _enemies = new Enemies(_level, _renderer);
+            _ufo = new Ufo(_renderer);
         }
 
         private void GameOver()
@@ -192,6 +204,40 @@ namespace SpaceInvaders.Models
             _gameHeader.RenderStats(_score, _level, _lifes);
         }
 
+        private void CheckIfBarrierPartIsDestroyed()
+        {
+            List<BeamBase> beamsToDelete = new List<BeamBase>();
+
+            foreach (var beam in _ship.GetBeams())
+            {
+                var beamPos = beam.Position;
+
+                if (beamPos.Y > 49 && beamPos.Y < 54)
+                    if (_barriers.DeleteBarrierPart(beam.Position))
+                    {
+                        beamsToDelete.Add(beam);
+                        beam.Unrender();
+                    }
+            }
+            _ship.DeleteBeams(beamsToDelete);
+
+            beamsToDelete = new List<BeamBase>();
+            foreach (var beam in _enemyBeams.GetBeams())
+            {
+                var beamPos = beam.Position;
+                if (beamPos.Y>49 & beamPos.Y<54)
+                {
+                    if (_barriers.DeleteBarrierPart(beamPos))
+                    {
+                        beamsToDelete.Add(beam);
+                        beam.Unrender();
+                    }
+                }
+            }
+
+            _enemyBeams.DeleteBeams(beamsToDelete);
+        }
+
         private void LifeLost()
         {
             var time = (_lifes == 0) ? 170 : 100;
@@ -208,6 +254,8 @@ namespace SpaceInvaders.Models
                 _enemies.Render();
                 _enemyBeams.Render();
                 _ship.RenderBeams();
+                _ufo.Render();
+
                 Delay();
 
                 if (_lifes > 0)
@@ -215,6 +263,7 @@ namespace SpaceInvaders.Models
 
                 _ship.MoveBeams();
                 _enemyBeams.Move();
+                _ufo.Invoke();
 
                 if (!blinkCounter.IsCounting())
                 {
