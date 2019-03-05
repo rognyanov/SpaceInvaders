@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using SpaceInvaders.Contracts.Base;
+﻿using SpaceInvaders.Contracts.Base;
 using SpaceInvaders.Contracts.Enemies;
 using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Enemies;
 using SpaceInvaders.Models.Grid;
+using SpaceInvaders.Models.Helpers;
+using System;
+using System.Collections.Generic;
 
 namespace SpaceInvaders.Models.Entities.Base
 {
     public abstract class EnemyBeamsBase : BeamsBase, IEnemyBeams
     {
+        protected const int MOVE_SPEED = 2;
+        protected const int LOWER_BOUNDARY = 59;
+        protected const int INIT_NUM_OF_BEAMS = 2;
+
         protected EnemyBeamsBase(IRenderer<string> renderer) 
             : base(renderer)
         {
@@ -58,6 +63,13 @@ namespace SpaceInvaders.Models.Entities.Base
         public void DeleteBeams(List<BeamBase> beams)
         {
             beams.ForEach(b => _beams.Remove(b));
+        }
+
+        public void ReInitialize(int level)
+        {
+            _moveTimer = new Timer(MOVE_SPEED);
+            _maxBeamsCount = INIT_NUM_OF_BEAMS + (level - 1);
+            _endRow = LOWER_BOUNDARY;
         }
     }
 }

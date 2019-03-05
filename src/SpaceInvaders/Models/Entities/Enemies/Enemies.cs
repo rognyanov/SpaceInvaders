@@ -22,14 +22,14 @@ namespace SpaceInvaders.Models.Entities.Enemies
         private const int MOVE_INIT_SPEED = 6;
         private const int MOVE_SPEED_INCREASE = 120;
 
-        private readonly List<EnemyBase> _enemies;
+        private  List<EnemyBase> _enemies;
         private int _moveSpeed;
-        private readonly Timer _moveSpeedIncrease;
+        private  Timer _moveSpeedIncrease;
         private Timer _moveTimer;
         private Timer _moveUpSteps;
         private Timer _moveUpSpeed;
         private MoveType _currentMove;
-        private readonly IRenderer<string> _renderer;
+        private IRenderer<string> _renderer;
 
         public Enemies(int level, IRenderer<string> renderer)
         {
@@ -214,6 +214,19 @@ namespace SpaceInvaders.Models.Entities.Enemies
         public List<IPosition> GetPositions()
         {
             return _enemies.Select(e => e.Position).ToList();
+        }
+
+        public void ReInitialize(int level)
+        {
+            _enemies = new List<EnemyBase>();
+            _moveTimer = new Timer(MOVE_INIT_SPEED);
+            _moveUpSteps = new Timer(MOVE_UP_STEPS);
+            _moveUpSpeed = new Timer(MOVE_UP_SPEED);
+            _moveSpeed = MOVE_INIT_SPEED;
+            _moveSpeedIncrease = new Timer(MOVE_SPEED_INCREASE);
+            _currentMove = MoveType.Right;
+
+            InitEnemies(level);
         }
 
         private void InitEnemies(int level)

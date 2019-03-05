@@ -43,20 +43,28 @@ namespace SpaceInvaders.Models
         /// Space invaders console game constructor.
         /// </summary>
         /// <param name="renderer">The class that can render stuff on the console.</param>
-        public SpaceInvadersConsoleGame(IRenderer<string> renderer)
+        public SpaceInvadersConsoleGame(IRenderer<string> renderer, 
+            IShip ship, 
+            IEnemies enemies,
+            EnemyBeamsBase enemyBeams,
+            IGameHeader gameHeader,
+            IExtraLife extraLife,
+            IUfo ufo,
+            IBarriers barriers)
         {
-            _renderer = renderer;
             _isGameOver = false;
             _score = INIT_SCORE;
             _lifes = INIT_LIFES;
             _level = INIT_LEVEL;
-            _ship = new Ship(new ConsolePosition(45,57), _renderer);
-            _enemies = new Enemies(_level, _renderer);
-            _enemyBeams = new EnemyBeams(_level, _renderer);
-            _gameHeader = new GameHeader(_renderer);
-            _extraLife = new ExtraLife(_renderer, _gameHeader);
-            _ufo = new Ufo(_renderer);
-            _barriers = new Barriers(_renderer);
+
+            _renderer = renderer;
+            _ship = ship;
+            _enemies = enemies;
+            _enemyBeams = enemyBeams;
+            _gameHeader = gameHeader;
+            _extraLife = extraLife;
+            _ufo = ufo;
+            _barriers = barriers;
 
             PrepareConsole();
 
@@ -145,10 +153,9 @@ namespace SpaceInvaders.Models
 
         private void InitNextLevel()
         {
-            _ship = new Ship(new ConsolePosition(45, 57),_renderer);
-            _enemies = new Enemies(_level, _renderer);
-            _enemyBeams = new EnemyBeams(_level, _renderer);
-            //_ufo = new Ufo(_renderer);
+            _ship.ReInitialize(new ConsolePosition(45, 57));
+            _enemies.ReInitialize(_level);
+            _enemyBeams.ReInitialize(_level);
         }
 
         private void ExtraLifeCheck()

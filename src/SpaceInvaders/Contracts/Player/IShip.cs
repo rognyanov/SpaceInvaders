@@ -1,4 +1,5 @@
 ﻿using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 using SpaceInvaders.Models.Entities.Base;
 using System.Collections.Generic;
 
@@ -32,5 +33,7 @@ namespace SpaceInvaders.Contracts.Player
         /// </summary>
         /// <returns>The contained beams collection</returns>
         List<BeamBase> GetBeams();
+
+        void ReInitialize(IPosition position);
     }
 }

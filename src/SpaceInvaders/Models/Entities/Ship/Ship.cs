@@ -148,5 +148,14 @@ namespace SpaceInvaders.Models.Entities.Ship
         {
             _beams.DeleteBeams(beams);
         }
+
+        /// <inheritdoc />
+        public void ReInitialize(IPosition position)
+        {
+            Position = position;
+            _currentMove = MoveType.None;
+            _beams = new ShipBeams(_renderer);
+            _moveTimer = new Timer(INIT_MOVE_SPEED);
+        }
     }
 }

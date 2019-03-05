@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using SpaceInvaders.Contracts.Base;
+using SpaceInvaders.Contracts.Visual;
 
 namespace SpaceInvaders.Contracts.Enemies
 {
@@ -40,5 +41,7 @@ namespace SpaceInvaders.Contracts.Enemies
         /// </summary>
         /// <returns>Collection of enemies' positions</returns>
         List<IPosition> GetPositions();
+
+        void ReInitialize(int level);
     }
 }

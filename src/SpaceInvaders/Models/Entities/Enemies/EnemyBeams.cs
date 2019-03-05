@@ -6,10 +6,6 @@ namespace SpaceInvaders.Models.Entities.Enemies
 {
     public sealed class EnemyBeams : EnemyBeamsBase
     {
-        private const int MOVE_SPEED = 2;
-        private const int LOWER_BOUNDARY = 59;
-        private const int INIT_NUM_OF_BEAMS = 2;
-
         public EnemyBeams(int level, IRenderer<string> renderer)
             :base(renderer)
         {

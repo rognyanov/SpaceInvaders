@@ -24,5 +24,7 @@ namespace SpaceInvaders.Contracts.Enemies
         /// </summary>
         /// <param name="beams">The beams to delete</param>
         void DeleteBeams(List<BeamBase> beams);
+
+        void ReInitialize(int level);
     }
 }
